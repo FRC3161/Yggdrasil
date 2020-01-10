@@ -15,12 +15,12 @@ checkstyle {
 repositories {
     jcenter()
     maven {
-        url 'http://first.wpi.edu/FRC/roborio/maven/release/'
+        url 'https://frcmaven.wpi.edu/artifactory/release/'
     }
 }
 
 dependencies {
-    api 'edu.wpi.first.wpilibj:wpilibj-java:2019+'
-    api 'edu.wpi.first.hal:hal-java:2019+'
-    api 'edu.wpi.first.ntcore:ntcore-java:2019+'
+    api 'edu.wpi.first.wpilibj:wpilibj-java:2020+'
+    api 'edu.wpi.first.hal:hal-java:2020+'
+    api 'edu.wpi.first.ntcore:ntcore-java:2020+'
 }
