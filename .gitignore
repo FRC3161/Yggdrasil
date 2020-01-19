@@ -5,3 +5,4 @@ dist/
 doc/
 README.html
 checkstyle/*.jar
+.classpath
