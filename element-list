@@ -1,0 +1,11 @@
+ca.team3161.lib.robot
+ca.team3161.lib.robot.motion.actuators
+ca.team3161.lib.robot.motion.drivetrains
+ca.team3161.lib.robot.motion.tracking
+ca.team3161.lib.robot.pid
+ca.team3161.lib.robot.sensors
+ca.team3161.lib.robot.subsystem
+ca.team3161.lib.robot.utils
+ca.team3161.lib.utils
+ca.team3161.lib.utils.controls
+com.team254.lib
