@@ -94,7 +94,7 @@ public final class Assert {
         /**
          * Create a new AssertionException with generic cause.
          */
-        public AssertionException() {
+        private AssertionException() {
             super("Unspecified assertion failure");
         }
 
@@ -103,7 +103,7 @@ public final class Assert {
          *
          * @param cause the cause for this exception to have occurred
          */
-        public AssertionException(final String cause) {
+        private AssertionException(final String cause) {
             super(cause);
         }
 

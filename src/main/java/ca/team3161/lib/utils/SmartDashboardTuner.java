@@ -18,7 +18,7 @@ public class SmartDashboardTuner extends RepeatingPooledSubsystem implements Lif
     protected final Consumer<Double> consumer;
     protected final ReentrantLock writeLock = new ReentrantLock();
     protected volatile double lastValue;
-    protected volatile boolean continuous = false;
+    protected volatile boolean continuous;
 
     public SmartDashboardTuner(String label, double defaultValue, Consumer<Double> consumer) {
         this(500, label, defaultValue, consumer);

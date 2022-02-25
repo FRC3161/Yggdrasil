@@ -12,8 +12,7 @@ deploy:
     local-dir: build/docs/javadoc
 
   - provider: releases
-    api_key:
-      secure: "Z4DJZh80aqgdfMAeiX+GxxMPxhZBju4EDW3TiECvwxlIQTsrl1Lfo5Xm/27e0jKcNf9QrixX+HPXxiIZtH+9vmBuKvHRhdwYiKjzCPtHfIk4GIT+/lswCRTEj6oKUnf0l09cuaE7JuhDFujZpV20TeerBwXlGrGuTMCfB9aYLqKPmDJ84zz7IzzVNklwIBr207FN4dxRUAgrAyKjcbS0EhgtDcfJQQ1uJWGFIu0YZeasVOReMiCXGjcNEL2umTCpub9DtEXFpC4n+ldZGN1FSyl4YcAIsZ/Y/TJY4wAYPvOZ4uPnIBSPQkpcBmoYegQSLF26uy8UsHNZDpoAUWzBq5tEaMLXMUQG2bqokpyd8+/BmknlOHEJXcetIiaAMNGSqKcru1gCVSmMbMT9HH8Et9BFbk8u2Xjk+kQu4xo3sPKyna63ivvxrjXa+o4CDqlTUcQJWBpMpS71MTtqlxgiCTYuH+RIJwNhsAL5S1VR5Hhn/MItIW7IoJZyPrY/f+O7/HPhUmQpUjKLlFukasgrhTh35YsgZtGUFCwO256jNKbLjOAUjJ8rnTVqzrkOYMIReSMWIFU16s9jxQdb6UDBNjY6Ab5ojo2zwyXB5KlAlmxqhBrJxTLZoO7ihmWumqXSluMDiDWIshZbKPLQK9V8fA913m8mcNaRc7J+sMbb0Kc="
+    api_key: $GITHUB_TOKEN
     file: build/libs/yggdrasil.jar
     on:
       repo: FRC3161/Yggdrasil

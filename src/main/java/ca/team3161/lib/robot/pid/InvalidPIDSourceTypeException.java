@@ -23,20 +23,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package ca.team3161.lib.robot.pid;
 
 import edu.wpi.first.wpilibj.PIDSourceType;
 
-class PIDUtils {
-
-    private PIDUtils() {
-    }
-
-    public static PIDSourceType validate(PIDSourceType sourceType) {
-        if (!PIDSourceType.kRate.equals(sourceType) && !PIDSourceType.kDisplacement.equals(sourceType)) {
-            throw new InvalidPIDSourceTypeException(sourceType);
-        }
-        return sourceType;
+public class InvalidPIDSourceTypeException extends IllegalArgumentException {
+    public InvalidPIDSourceTypeException(PIDSourceType sourceType) {
+        super("Unknown PIDSourceType: " + sourceType);
     }
 }

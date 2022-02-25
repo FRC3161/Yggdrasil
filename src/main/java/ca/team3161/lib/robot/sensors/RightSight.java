@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 public class RightSight extends DigitalInput {
 
-    protected volatile boolean inverted = false;
+    protected volatile boolean inverted;
 
     public RightSight(int channel) {
         super(channel);

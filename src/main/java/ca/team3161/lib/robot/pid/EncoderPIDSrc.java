@@ -29,19 +29,20 @@ package ca.team3161.lib.robot.pid;
 import static ca.team3161.lib.robot.pid.PIDUtils.validate;
 import static java.util.Objects.requireNonNull;
 
-import ca.team3161.lib.utils.ComposedComponent;
-import edu.wpi.first.wpilibj.Encoder;
-
-import edu.wpi.first.wpilibj.PIDSourceType;
 import java.util.Collection;
 import java.util.Collections;
+
+import ca.team3161.lib.utils.ComposedComponent;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.pidwrappers.PIDEncoder;
 
 /**
  * A PID source backed by a physical Encoder. Defaults to returning encoder rate values.
  */
-public class EncoderPIDSrc implements PIDRateValueSrc<Encoder>, PIDRawValueSrc<Encoder>, ComposedComponent<Encoder> {
+public class EncoderPIDSrc implements PIDRateValueSrc<PIDEncoder>, PIDRawValueSrc<PIDEncoder>, ComposedComponent<Encoder> {
 
-    private final Encoder enc;
+    private final PIDEncoder enc;
     private PIDSourceType sourceType = PIDSourceType.kRate;
 
     /**
@@ -49,7 +50,7 @@ public class EncoderPIDSrc implements PIDRateValueSrc<Encoder>, PIDRawValueSrc<E
      *
      * @param enc an Encoder object to use as a PIDSrc
      */
-    public EncoderPIDSrc(final Encoder enc) {
+    public EncoderPIDSrc(final PIDEncoder enc) {
         this.enc = requireNonNull(enc);
     }
 
@@ -57,7 +58,7 @@ public class EncoderPIDSrc implements PIDRateValueSrc<Encoder>, PIDRawValueSrc<E
      * {@inheritDoc}
      */
     @Override
-    public Encoder getSensor() {
+    public PIDEncoder getSensor() {
         return enc;
     }
 
@@ -72,7 +73,7 @@ public class EncoderPIDSrc implements PIDRateValueSrc<Encoder>, PIDRawValueSrc<E
             case kDisplacement:
                 return (float) enc.get();
             default:
-                throw new PIDUtils.InvalidPIDSourceTypeException(sourceType);
+                throw new InvalidPIDSourceTypeException(sourceType);
         }
     }
 
@@ -93,7 +94,4 @@ public class EncoderPIDSrc implements PIDRateValueSrc<Encoder>, PIDRawValueSrc<E
     public void setPIDSourceType(final PIDSourceType pidSourceType) {
         this.sourceType = validate(pidSourceType);
     }
-
-
-
 }

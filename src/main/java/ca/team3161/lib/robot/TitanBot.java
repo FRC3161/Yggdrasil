@@ -46,7 +46,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public abstract class TitanBot extends TimedRobot {
 
-    private volatile int accumulatedTime = 0;
+    private volatile int accumulatedTime;
     private final Lock modeLock = new ReentrantLock();
     private Future<?> autoJob;
     private final LifecycleShifter lifecycleShifter = new LifecycleShifter();

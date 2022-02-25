@@ -129,7 +129,7 @@ public enum CheesyVisionServer {
                 while (Timer.getFPGATimestamp() < lastHeartbeat + timeout) {
                     while (is.available() > 0) {
                         final int read = is.read(b);
-                        for (int i = 0; i < read; ++i) {
+                        for (int i = 0; i < read; i++) {
                             final byte reading = b[i];
                             final boolean leftStatus = (reading & (1 << 1)) > 0;
                             final boolean rightStatus = (reading & 1) > 0;

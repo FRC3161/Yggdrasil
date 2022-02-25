@@ -17,7 +17,7 @@ public class WPISmartPIDTuner extends RepeatingPooledSubsystem implements Lifecy
 
     protected final PIDController pid;
     protected final List<LifecycleListener> tuners;
-    protected boolean isContinuous = false;
+    protected boolean isContinuous;
 
     protected WPISmartPIDTuner(int period, PIDController pid, List<LifecycleListener> tuners) {
         super(period, TimeUnit.MILLISECONDS);
@@ -60,7 +60,7 @@ public class WPISmartPIDTuner extends RepeatingPooledSubsystem implements Lifecy
         private final List<Function<Integer, Function<Boolean, Function<String, Function<PIDController, LifecycleListener>>>>> generators = new ArrayList<>();
 
         private int period = 500;
-        private boolean continuous = false;
+        private boolean continuous;
 
         private void addTuner(String label, double defaultValue, Function<PIDController, Consumer<Double>> consumer) {
             generators.add(
@@ -132,8 +132,7 @@ public class WPISmartPIDTuner extends RepeatingPooledSubsystem implements Lifecy
             return this;
         }
 
-        public WPISmartPIDTuner build(PIDController controller) {
-            final String name = controller.getName();
+        public WPISmartPIDTuner build(String name, PIDController controller) {
             final String prefix;
             if (name != null && !name.isEmpty()) {
                 prefix = name;

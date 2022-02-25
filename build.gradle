@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'checkstyle'
+    id("org.openrewrite.rewrite") version("5.15.5")
 }
 
 checkstyle {
@@ -17,10 +18,23 @@ repositories {
     maven {
         url 'https://frcmaven.wpi.edu/artifactory/release/'
     }
+    mavenCentral()
 }
 
 dependencies {
-    api 'edu.wpi.first.wpilibj:wpilibj-java:2020+'
-    api 'edu.wpi.first.hal:hal-java:2020+'
-    api 'edu.wpi.first.ntcore:ntcore-java:2020+'
+    api 'edu.wpi.first.wpilibj:wpilibj-java:2022.3.1+'
+    api 'edu.wpi.first.wpilibOldCommands:wpilibOldCommands-java:2022.3.1+'
+    api 'edu.wpi.first.wpiutil:wpiutil-java:2022.3.1+'
+    api 'edu.wpi.first.hal:hal-java:2022.3.1+'
+    api 'edu.wpi.first.ntcore:ntcore-java:2022.3.1+'
+}
+
+rewrite {
+    activeRecipe("org.openrewrite.java.cleanup.Cleanup")
+}
+
+// FIXME actually deal with the 2020/2022 deprecations and remove this suppression config
+tasks.withType(JavaCompile) {
+     options.compilerArgs << '-Xlint:none'
+     options.compilerArgs << '-nowarn' // same as '-Xlint:none'
 }

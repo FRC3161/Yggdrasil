@@ -126,7 +126,7 @@ public abstract class AbstractController extends RepeatingIndependentSubsystem i
                 mapping.getValue().accept(getValue(mapping.getKey().getControl(), mapping.getKey().getAxis())));
         }
         synchronized (buttonBindings) {
-            buttonBindings.entrySet().forEach(binding -> {
+            buttonBindings.entrySet().forEach((Map.Entry<Binding, Runnable> binding) -> {
                 final Set<Button> buttons = binding.getKey().getButtons();
                 final PressType pressType = binding.getKey().getPressType();
                 final Runnable action = binding.getValue();

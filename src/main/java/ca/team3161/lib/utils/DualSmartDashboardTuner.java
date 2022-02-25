@@ -21,7 +21,7 @@ public class DualSmartDashboardTuner extends RepeatingPooledSubsystem implements
     protected final ReentrantLock writeLock = new ReentrantLock();
     protected volatile double lastValueA;
     protected volatile double lastValueB;
-    protected volatile boolean continuous = false;
+    protected volatile boolean continuous;
 
     public DualSmartDashboardTuner(int period, String labelA, String labelB, double defaultValueA, double defaultValueB,
             BiConsumer<Double, Double> consumer) {

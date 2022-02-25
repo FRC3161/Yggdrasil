@@ -29,17 +29,18 @@ package ca.team3161.lib.robot.motion.drivetrains;
 import static ca.team3161.lib.utils.Utils.normalizePwm;
 import static java.util.Objects.requireNonNull;
 
-import ca.team3161.lib.utils.ComposedComponent;
-import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.SpeedController;
 import java.util.Arrays;
 import java.util.Collection;
+
+import ca.team3161.lib.utils.ComposedComponent;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 public class ArcadeDrivetrain extends AbstractDrivetrainBase implements ComposedComponent<SpeedControllerGroup> {
 
     private final SpeedControllerGroup leftControllers;
     private final SpeedControllerGroup rightControllers;
-    private final RobotDrive drivebase;
+    private final DifferentialDrive drivebase;
 
     private volatile double forwardTarget;
     private volatile double turnTarget;
@@ -47,7 +48,7 @@ public class ArcadeDrivetrain extends AbstractDrivetrainBase implements Composed
     private ArcadeDrivetrain(ArcadeDrivetrain.Builder builder) {
         this.leftControllers = builder.leftControllers;
         this.rightControllers = builder.rightControllers;
-        this.drivebase = new RobotDrive(leftControllers, rightControllers);
+        this.drivebase = new DifferentialDrive(leftControllers, rightControllers);
     }
 
     /**

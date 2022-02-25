@@ -47,7 +47,7 @@ public class RampingSpeedController implements SpeedController, ComposedComponen
     private final double rampRatio;
     private final double firstFilter;
     private final double secondFilter;
-    private boolean inverted = false;
+    private boolean inverted;
 
     private RampingSpeedController(final Builder builder) {
         this.controller = builder.controller;
@@ -55,15 +55,6 @@ public class RampingSpeedController implements SpeedController, ComposedComponen
         this.rampRatio = builder.rampRatio;
         this.firstFilter = builder.firstFilter;
         this.secondFilter = builder.secondFilter;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void pidWrite(final double output) {
-        final double val = normalizePwm(adjust(normalizePwm(output)));
-        controller.pidWrite(inverted ? -val : val);
     }
 
     /**

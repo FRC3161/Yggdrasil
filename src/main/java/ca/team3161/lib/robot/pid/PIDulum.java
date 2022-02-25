@@ -95,7 +95,7 @@ public final class PIDulum<V extends PIDAngleValueSrc<?>> extends AbstractPID<V,
             return feedForward;
         }
 
-        output = (pOut + iOut + dOut + feedForward);
+        output = pOut + iOut + dOut + feedForward;
 
         return normalizePwm(output);
     }

@@ -150,7 +150,7 @@ public class LogitechAttack3 extends AbstractController {
 
     protected static void validate(final Binding binding, final String message) {
         Objects.requireNonNull(binding);
-        binding.getButtons().stream().forEach(button -> {
+        binding.getButtons().stream().forEach((Gamepad.Button button) -> {
             if (!(button instanceof LogitechAttack3Button)) {
                 throw new IllegalArgumentException(message);
             }

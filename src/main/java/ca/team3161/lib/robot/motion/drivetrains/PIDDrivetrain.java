@@ -28,17 +28,17 @@ package ca.team3161.lib.robot.motion.drivetrains;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.concurrent.TimeUnit;
+
 import ca.team3161.lib.robot.pid.GyroAnglePIDSrc;
 import ca.team3161.lib.robot.pid.PID;
 import ca.team3161.lib.robot.pid.SimplePID;
 import ca.team3161.lib.utils.ComposedComponent;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedController;
-
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.concurrent.TimeUnit;
+import edu.wpi.first.wpilibj.pidwrappers.PIDEncoder;
 
 /**
  * A drivetrain controller that uses PID objects and is able to accurately drive straight and turn by degrees.
@@ -48,10 +48,10 @@ public final class PIDDrivetrain extends AbstractDrivetrainBase implements Compo
 
     public static final long SUBSYSTEM_TASK_PERIOD = 20L;
     private final SpeedController leftDrive, rightDrive;
-    private final PID<? extends Encoder, Integer> leftEncoder, rightEncoder;
+    private final PID<? extends PIDEncoder, Integer> leftEncoder, rightEncoder;
     private final PID<? extends Gyro, Float> turningPid, bearingPid;
     private volatile float turningDegreesTarget = 0.0f;
-    private volatile int leftTicksTarget = 0, rightTicksTarget = 0;
+    private volatile int leftTicksTarget, rightTicksTarget;
     private Task t;
     private final Object notifier;
 
@@ -76,7 +76,7 @@ public final class PIDDrivetrain extends AbstractDrivetrainBase implements Compo
      * @param bearingPid   an AnglePidSrc to orient to a vector while stationary
      */
     public PIDDrivetrain(final SpeedController leftDrive, final SpeedController rightDrive,
-                         final PID<? extends Encoder, Integer> leftEncoder, final PID<? extends Encoder, Integer> rightEncoder,
+                         final PID<? extends PIDEncoder, Integer> leftEncoder, final PID<? extends PIDEncoder, Integer> rightEncoder,
                          final PID<? extends Gyro, Float> turningPid, final PID<? extends Gyro, Float> bearingPid) {
         super(SUBSYSTEM_TASK_PERIOD, TimeUnit.MILLISECONDS);
         this.leftDrive = requireNonNull(leftDrive);
@@ -253,8 +253,8 @@ public final class PIDDrivetrain extends AbstractDrivetrainBase implements Compo
     public static class Builder {
         private SpeedController leftDrive;
         private SpeedController rightDrive;
-        private PID<? extends Encoder, Integer> leftPidController;
-        private PID<? extends Encoder, Integer> rightPidController;
+        private PID<? extends PIDEncoder, Integer> leftPidController;
+        private PID<? extends PIDEncoder, Integer> rightPidController;
         private PID<? extends Gyro, Float> turningPid;
         private PID<? extends Gyro, Float> bearingPid;
 
@@ -289,7 +289,7 @@ public final class PIDDrivetrain extends AbstractDrivetrainBase implements Compo
          * @param leftPidController left PID-enabled controller. See {@link ca.team3161.lib.robot.pid.VelocityController}
          * @return this builder
          */
-        public Builder leftPidController(PID<? extends Encoder, Integer> leftPidController) {
+        public Builder leftPidController(PID<? extends PIDEncoder, Integer> leftPidController) {
             this.leftPidController = leftPidController;
             return this;
         }
@@ -298,7 +298,7 @@ public final class PIDDrivetrain extends AbstractDrivetrainBase implements Compo
          * @param rightPidController right PID-enabled controller. See {@link ca.team3161.lib.robot.pid.VelocityController}
          * @return this builder
          */
-        public Builder rightPidController(PID<? extends Encoder, Integer> rightPidController) {
+        public Builder rightPidController(PID<? extends PIDEncoder, Integer> rightPidController) {
             this.rightPidController = rightPidController;
             return this;
         }

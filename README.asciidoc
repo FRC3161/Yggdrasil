@@ -5,7 +5,6 @@ v0.20.0, 26 March 2019
 
 image:https://travis-ci.com/FRC3161/Yggdrasil.svg?branch=master["Build Status", link="https://travis-ci.com/FRC3161/Yggdrasil"]
 image:https://jitpack.io/v/frc3161/yggdrasil.svg["Jitpack", link="https://jitpack.io/#frc3161/yggdrasil"]
-image:https://img.shields.io/jitpack/dm/github/FRC3161/Yggdrasil.svg["Downloads", link="https://jitpack.io/#frc3161/yggdrasil"]
 
 == What is this?
 Yggdrasil is the name of the reusable FRC Java libraries which FRC 3161 provides,
@@ -66,7 +65,7 @@ proper credit!
 
 === Building
 Yggdrasil can be built by simply running `./gradlew build` in the root of this
-project.
+project. Code auto-formatting can be applied with `./gradlew rewriteRun`.
 
 == Design
 The design intended by these libraries are a main robot class, subclassed

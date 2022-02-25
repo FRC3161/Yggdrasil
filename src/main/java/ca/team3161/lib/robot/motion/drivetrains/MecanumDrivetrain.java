@@ -29,16 +29,16 @@ package ca.team3161.lib.robot.motion.drivetrains;
 import static ca.team3161.lib.utils.Utils.normalizePwm;
 import static java.util.Objects.requireNonNull;
 
-import ca.team3161.lib.utils.ComposedComponent;
-import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.SpeedController;
-
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
+import ca.team3161.lib.utils.ComposedComponent;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.drive.MecanumDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 /**
  * A prepackaged mecanum drive solution, suitable for 4-wheeled Mecanum drivetrains.
@@ -51,7 +51,7 @@ public class MecanumDrivetrain extends AbstractDrivetrainBase implements Compose
     private final SpeedController backLeftController;
     private final SpeedController backRightController;
     private final Optional<Gyro> gyro;
-    private final RobotDrive drivebase;
+    private final MecanumDrive drivebase;
 
     private volatile double forwardTarget = 0;
     private volatile double strafeTarget = 0;
@@ -63,7 +63,7 @@ public class MecanumDrivetrain extends AbstractDrivetrainBase implements Compose
         this.backLeftController = builder.backLeftController;
         this.backRightController = builder.backRightController;
         this.gyro = Optional.ofNullable(builder.gyro);
-        this.drivebase = new RobotDrive(frontLeftController, backLeftController, frontRightController, backRightController);
+        this.drivebase = new MecanumDrive(frontLeftController, backLeftController, frontRightController, backRightController);
     }
 
     /**
@@ -124,7 +124,7 @@ public class MecanumDrivetrain extends AbstractDrivetrainBase implements Compose
      */
     @Override
     public void task() throws Exception {
-        drivebase.mecanumDrive_Cartesian(strafeTarget, forwardTarget, rotateTarget,
+        drivebase.driveCartesian(strafeTarget, forwardTarget, rotateTarget,
                 gyro.flatMap(g -> Optional.ofNullable(g.getAngle())).orElse(0.0));
     }
 

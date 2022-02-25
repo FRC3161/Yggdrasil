@@ -87,7 +87,7 @@ public class SimplePID extends AbstractPID<PIDSource, Float> implements Composed
             return 0f;
         }
 
-        output = (pOut + iOut + dOut);
+        output = pOut + iOut + dOut;
 
         return normalizePwm(output);
     }

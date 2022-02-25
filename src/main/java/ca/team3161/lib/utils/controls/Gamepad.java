@@ -411,10 +411,10 @@ public interface Gamepad {
 
         @Override
         public String toString() {
-            return "Binding{" +
-                           "buttons=" + buttons +
-                           ", pressType=" + pressType +
-                           '}';
+            return "Binding{"
+                           + "buttons=" + buttons
+                           + ", pressType=" + pressType
+                           + '}';
         }
     }
 
@@ -490,10 +490,10 @@ public interface Gamepad {
 
         @Override
         public String toString() {
-            return "Mapping{" +
-                           "control=" + control +
-                           ", axis=" + axis +
-                           '}';
+            return "Mapping{"
+                           + "control=" + control
+                           + ", axis=" + axis
+                           + '}';
         }
     }
 }

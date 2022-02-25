@@ -29,27 +29,27 @@ package ca.team3161.lib.robot.pid;
 import static ca.team3161.lib.robot.pid.PIDUtils.validate;
 import static java.util.Objects.requireNonNull;
 
-import ca.team3161.lib.utils.ComposedComponent;
-
-import edu.wpi.first.wpilibj.GyroBase;
-import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import java.util.Collection;
 import java.util.Collections;
+
+import ca.team3161.lib.utils.ComposedComponent;
+import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.pidwrappers.PIDAnalogGyro;
 
 /**
  * A PID source backed by a physical Gyroscope. Defaults to returning gyroscope angle values.
  */
-public class GyroAnglePIDSrc implements PIDSrc<GyroBase, Float>, PIDAngleValueSrc<GyroBase>, ComposedComponent<Gyro> {
+public class GyroAnglePIDSrc implements PIDSrc<PIDAnalogGyro, Float>, PIDAngleValueSrc<PIDAnalogGyro>, ComposedComponent<Gyro> {
 
-    private final GyroBase gyro;
+    private final PIDAnalogGyro gyro;
     private PIDSourceType sourceType = PIDSourceType.kDisplacement;
 
     /**
      * Create a new GyroAnglePIDSrc instance.
      * @param gyro a Gyro object to use as a PIDSrc.
      */
-    public GyroAnglePIDSrc(final GyroBase gyro) {
+    public GyroAnglePIDSrc(final PIDAnalogGyro gyro) {
         this.gyro = requireNonNull(gyro);
     }
 
@@ -65,7 +65,7 @@ public class GyroAnglePIDSrc implements PIDSrc<GyroBase, Float>, PIDAngleValueSr
             case kRate:
                 return (float) gyro.getRate();
             default:
-                throw new PIDUtils.InvalidPIDSourceTypeException(sourceType);
+                throw new InvalidPIDSourceTypeException(sourceType);
         }
     }
 
@@ -89,7 +89,7 @@ public class GyroAnglePIDSrc implements PIDSrc<GyroBase, Float>, PIDAngleValueSr
      * {@inheritDoc}
      */
     @Override
-    public GyroBase getSensor() {
+    public PIDAnalogGyro getSensor() {
         return gyro;
     }
 

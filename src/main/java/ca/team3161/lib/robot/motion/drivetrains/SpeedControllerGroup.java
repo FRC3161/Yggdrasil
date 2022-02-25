@@ -147,16 +147,6 @@ public final class SpeedControllerGroup implements SpeedController, ComposedComp
         speedControllers.forEach(SpeedController::disable);
     }
 
-    /**
-     * Call pidWrite on each SpeedController in this collection.
-     *
-     * @param output Set the output to the value calculated by PIDController
-     */
-    @Override
-    public void pidWrite(final double output) {
-        speedControllers.forEach(c -> c.pidWrite(output));
-    }
-
     @Override
     public boolean getInverted() {
         return inversion == INVERTED;

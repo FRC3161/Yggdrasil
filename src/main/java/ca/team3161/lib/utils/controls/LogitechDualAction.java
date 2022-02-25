@@ -173,7 +173,7 @@ public class LogitechDualAction extends AbstractController {
 
     protected static void validate(final Binding binding, final String message) {
         Objects.requireNonNull(binding);
-        binding.getButtons().stream().forEach(button -> {
+        binding.getButtons().stream().forEach((Gamepad.Button button) -> {
             if (!(button instanceof LogitechButton)) {
                 throw new IllegalArgumentException(message);
             }

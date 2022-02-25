@@ -26,8 +26,8 @@
 
 package ca.team3161.lib.robot.pid;
 
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.pidwrappers.PIDEncoder;
 
 /**
  * A VelocityController with toggleable "traction control". When disabled, the PID control is bypassed and the input
@@ -35,13 +35,13 @@ import edu.wpi.first.wpilibj.SpeedController;
  */
 public class TractionController extends VelocityController {
 
-    private boolean tractionEnabled = false;
+    private boolean tractionEnabled;
 
-    public TractionController(final SpeedController speedController, final Encoder encoder, final float maxRotationalRate, final float kP, final float kI, final float kD, final float maxIntegralError, final float deadband) {
+    public TractionController(final SpeedController speedController, final PIDEncoder encoder, final float maxRotationalRate, final float kP, final float kI, final float kD, final float maxIntegralError, final float deadband) {
         super(speedController, encoder, maxRotationalRate, kP, kI, kD, maxIntegralError, deadband);
     }
 
-    public TractionController(final SpeedController speedController, final PIDRateValueSrc<Encoder> encoderPidSrc, final float maxRotationalRate, final float kP, final float kI, final float kD, final float maxIntegralError, final float deadband) {
+    public TractionController(final SpeedController speedController, final PIDRateValueSrc<PIDEncoder> encoderPidSrc, final float maxRotationalRate, final float kP, final float kI, final float kD, final float maxIntegralError, final float deadband) {
         super(speedController, encoderPidSrc, maxRotationalRate, kP, kI, kD, maxIntegralError, deadband);
     }
 

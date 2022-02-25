@@ -28,20 +28,20 @@ package ca.team3161.lib.robot.pid;
 
 import static java.util.Objects.requireNonNull;
 
-import ca.team3161.lib.utils.ComposedComponent;
-import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.interfaces.Potentiometer;
-
 import java.util.Collection;
 import java.util.Collections;
+
+import ca.team3161.lib.utils.ComposedComponent;
+import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.pidwrappers.PIDAnalogPotentiometer;
 
 /**
  * A PID source that converts a rotary potentiometer's voltage output into degrees of
  * rotation.
  */
-public final class PotentiometerVoltagePIDSrc implements PIDAngleValueSrc<Potentiometer>, ComposedComponent<Potentiometer> {
+public final class PotentiometerVoltagePIDSrc implements PIDAngleValueSrc<PIDAnalogPotentiometer>, ComposedComponent<PIDAnalogPotentiometer> {
 
-    private final Potentiometer pot;
+    private final PIDAnalogPotentiometer pot;
     private final float minVolt, maxVolt, minAngle, maxAngle;
 
     /**
@@ -53,7 +53,7 @@ public final class PotentiometerVoltagePIDSrc implements PIDAngleValueSrc<Potent
      * @param minAngle the minimum angle the system can physically rotate to
      * @param maxAngle the maximum angle the system can physically rotate to
      */
-    public PotentiometerVoltagePIDSrc(final Potentiometer pot,
+    public PotentiometerVoltagePIDSrc(final PIDAnalogPotentiometer pot,
                                       final float minVolt, final float maxVolt,
                                       final float minAngle, final float maxAngle) {
         this.pot = requireNonNull(pot);
@@ -67,7 +67,7 @@ public final class PotentiometerVoltagePIDSrc implements PIDAngleValueSrc<Potent
      * {@inheritDoc}
      */
     @Override
-    public Potentiometer getSensor() {
+    public PIDAnalogPotentiometer getSensor() {
         return pot;
     }
 
@@ -105,7 +105,7 @@ public final class PotentiometerVoltagePIDSrc implements PIDAngleValueSrc<Potent
      * {@inheritDoc}
      */
     @Override
-    public Collection<Potentiometer> getComposedComponents() {
+    public Collection<PIDAnalogPotentiometer> getComposedComponents() {
         return Collections.singleton(pot);
     }
 
