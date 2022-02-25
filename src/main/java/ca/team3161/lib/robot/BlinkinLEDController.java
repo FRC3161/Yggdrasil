@@ -88,7 +88,7 @@ public class BlinkinLEDController extends RepeatingPooledSubsystem {
         SPARKLE_COLOUR2_ON_1(0.39),
         GRADIENT_COLOUR1_AND_2(0.41),
         BPM_COLOUR1_AND_2(0.43),
-        E2E_BLEND_COLOUR1_TO_2(0.47),
+        E2E_BLEND_COLOUR1_TO_2(0.45),
         E2E_BLEND_COLOUR2_TO_1(0.47), // Doesn't state that it's 2 to 1 in the pdf but it's the only possible option other than 1 to 2
         COLOUR1_AND_2(0.49),
         TWINKLES_COLOUR1_AND_2(0.51),
