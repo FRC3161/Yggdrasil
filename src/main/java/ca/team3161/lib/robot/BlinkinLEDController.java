@@ -3,7 +3,7 @@ package ca.team3161.lib.robot;
 import java.util.concurrent.TimeUnit; 
 
 import ca.team3161.lib.robot.subsystem.RepeatingPooledSubsystem;
-import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 
 /**
  * A class that controls a REV Robotics Blinkin 
