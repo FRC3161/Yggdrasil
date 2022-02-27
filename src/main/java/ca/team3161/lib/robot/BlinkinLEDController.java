@@ -132,7 +132,7 @@ public class BlinkinLEDController extends RepeatingPooledSubsystem {
      * @param pwmPort   The PWM port of the Blinkin
      */
     public BlinkinLEDController(int pwmPort) {
-        super(50, TimeUnit.MILLISECONDS);
+        super(20, TimeUnit.MILLISECONDS);
         this.blinkinController = new Spark(pwmPort);
 
     }
