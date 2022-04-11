@@ -39,6 +39,10 @@ public abstract class RepeatingIndependentSubsystem extends AbstractIndependentS
     private final long timeout;
     private final TimeUnit timeUnit;
 
+    public RepeatingIndependentSubsystem() {
+        this(20, TimeUnit.MILLISECONDS);
+    }
+
     public RepeatingIndependentSubsystem(final long timeout, final TimeUnit timeUnit) {
         requireNonNull(timeUnit);
         this.timeout = requireNonNegative(timeout);

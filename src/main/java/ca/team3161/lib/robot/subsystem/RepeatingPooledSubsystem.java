@@ -39,6 +39,10 @@ public abstract class RepeatingPooledSubsystem extends AbstractPooledSubsystem {
     private final long timeout;
     private final TimeUnit timeUnit;
 
+    public RepeatingPooledSubsystem() {
+        this(20, TimeUnit.MILLISECONDS);
+    }
+
     public RepeatingPooledSubsystem(final long timeout, final TimeUnit timeUnit) {
         requireNonNull(timeUnit);
         this.timeout = requireNonNegative(timeout);
