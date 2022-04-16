@@ -122,8 +122,12 @@ public abstract class AbstractController extends RepeatingIndependentSubsystem i
         final Map<Button, Boolean> previousButtonStates = new HashMap<>(buttonStates);
         getButtons().forEach(button -> buttonStates.put(button, getButton(button)));
         synchronized (controlsMapping) {
-            controlsMapping.entrySet().forEach(mapping ->
-                mapping.getValue().accept(getValue(mapping.getKey().getControl(), mapping.getKey().getAxis())));
+            controlsMapping.entrySet().forEach(mapping -> {
+                if (mapping == null || mapping.getValue() == null) {
+                    return;
+                }
+                mapping.getValue().accept(getValue(mapping.getKey().getControl(), mapping.getKey().getAxis()));
+            });
         }
         synchronized (buttonBindings) {
             buttonBindings.entrySet().forEach((Map.Entry<Binding, Runnable> binding) -> {
