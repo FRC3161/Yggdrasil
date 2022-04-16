@@ -114,11 +114,11 @@ public abstract class AbstractPID<T extends PIDSource, V extends Number> impleme
             return false;
         }
         final boolean atTarget = Math.abs(prevError) < deadband;
-        final long timeNow = System.nanoTime();
+        final long timeNow = System.currentTimeMillis();
         if (!atTarget) {
             lastTimeNotAtTarget = timeNow;
         }
-        final boolean deadbandPeriodElapsed = lastTimeNotAtTarget < timeNow - deadbandUnit.toNanos(deadbandPeriod);
+        final boolean deadbandPeriodElapsed = lastTimeNotAtTarget < timeNow - deadbandUnit.toMillis(deadbandPeriod);
 
         return atTarget && deadbandPeriodElapsed;
     }

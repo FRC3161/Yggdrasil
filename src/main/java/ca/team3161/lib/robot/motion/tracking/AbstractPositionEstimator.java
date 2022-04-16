@@ -135,7 +135,7 @@ public abstract class AbstractPositionEstimator extends RepeatingPooledSubsystem
     protected abstract void updateSteerSpecificParameters();
 
     protected void updateTime() {
-        time = System.nanoTime();
+        time = System.currentTimeMillis();
         dt = time - pt;
         pt = time;
     }
