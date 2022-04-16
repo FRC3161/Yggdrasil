@@ -26,8 +26,7 @@
 
 package ca.team3161.lib.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.TimedRobot;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
@@ -37,13 +36,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.TimedRobot;
+
 /**
  * A subclass of TimedRobot. Autonomous is run in a new Thread, leaving the main robot thread
  * responsible (generally) solely for handling FMS events, Watchdog, etc. This allows
  * autonomous scripts to use convenient semantics such as Thread sleeping rather than periodically
  * checking Timer objects.
  */
-public abstract class TitanBot extends TimedRobot {
+public abstract class TitanBot extends TimedRobot implements LifecycleListener {
 
     private final Lock modeLock = new ReentrantLock();
     private volatile Future<?> autoJob;
@@ -56,6 +58,7 @@ public abstract class TitanBot extends TimedRobot {
     @Override
     public final void robotInit() {
         super.robotInit();
+        registerLifecycleComponent(this);
         try {
             robotSetup();
         } catch (Exception e) {
@@ -95,7 +98,7 @@ public abstract class TitanBot extends TimedRobot {
         autoJob = Executors.newSingleThreadExecutor().submit(() -> {
             try {
                 modeLock.lockInterruptibly();
-                autonomousRoutine(new AutonomousPeriodTimer(getAutonomousPeriodLengthSeconds(), () -> autoJob.cancel(true)));
+                autonomousRoutine(new AutonomousPeriodTimer(getAutonomousPeriodLengthSeconds()));
             } catch (final Exception e) {
                 handleException("Exception in autonomousRoutine", e);
             } finally {
@@ -150,9 +153,6 @@ public abstract class TitanBot extends TimedRobot {
     @Override
     public final void teleopPeriodic() {
         super.teleopPeriodic();
-        if (autoJob != null) {
-            autoJob.cancel(true);
-        }
         try {
             modeLock.lock();
             teleopRoutine();
@@ -194,9 +194,6 @@ public abstract class TitanBot extends TimedRobot {
     @Override
     public final void disabledPeriodic() {
         super.disabledPeriodic();
-        if (autoJob != null) {
-            autoJob.cancel(true);
-        }
         try {
             modeLock.lock();
             disabledRoutine();
@@ -225,9 +222,6 @@ public abstract class TitanBot extends TimedRobot {
     @Override
     public final void testPeriodic() {
         super.testPeriodic();
-        if (autoJob != null) {
-            autoJob.cancel(true);
-        }
         try {
             modeLock.lock();
             testRoutine();
@@ -253,6 +247,19 @@ public abstract class TitanBot extends TimedRobot {
         }
     }
 
+    @Override
+    public void onLifecycleChange(LifecycleEvent event) {
+        switch (event.getMode()) {
+            case ON_AUTO:
+                break;
+            default:
+                if (this.autoJob != null) {
+                    this.autoJob.cancel(true);
+                }
+                break;
+        }
+    }
+
     private void transitionLifecycle(RobotMode mode) {
         LifecycleEvent event = new LifecycleEvent(mode);
         lifecycleShifter.shift(event);
@@ -264,16 +271,14 @@ public abstract class TitanBot extends TimedRobot {
         e.printStackTrace(); // TODO log to file?
     }
 
-    public static class AutonomousPeriodTimer implements LifecycleListener {
-        private volatile int accumulatedTime;
+    public static class AutonomousPeriodTimer {
 
-        private final int maxPeriodLength;
-        private final Runnable canceller;
+        private final long maxPeriodLength;
+        private final long startTime = System.currentTimeMillis();
         private volatile RobotMode currentMode = RobotMode.ON_AUTO;
 
-        private AutonomousPeriodTimer(int maxPeriodLength, Runnable canceller) {
-            this.maxPeriodLength = maxPeriodLength;
-            this.canceller = Objects.requireNonNull(canceller);
+        private AutonomousPeriodTimer(int maxPeriodLengthSeconds) {
+            this.maxPeriodLength = TimeUnit.SECONDS.toMillis(maxPeriodLengthSeconds);
         }
 
         public RobotMode getCurrentMode() {
@@ -289,25 +294,17 @@ public abstract class TitanBot extends TimedRobot {
          * @param length how long to wait for (approximate)
          * @param unit   the time units the given delay is in
          * @throws InterruptedException if the autonomous thread is woken up early, for any reason
+         * @returns true if there is still expected remaining time in autonomous after the calling thread wakes.
+         * If this is false, the calling thread should stop any further execution.
          */
-        public final void waitFor(final long length, final TimeUnit unit) throws InterruptedException {
+        public boolean waitFor(final long length, final TimeUnit unit) throws InterruptedException {
             Objects.requireNonNull(unit);
-            accumulatedTime += TimeUnit.MILLISECONDS.convert(length, unit);
-            if (accumulatedTime > TimeUnit.SECONDS.toMillis(maxPeriodLength)) {
-                canceller.run();
-            }
-            Thread.sleep(TimeUnit.MILLISECONDS.convert(length, unit));
-            if (!RobotMode.ON_AUTO.equals(currentMode)) {
-                canceller.run();
-            }
-        }
-
-        @Override
-        public void onLifecycleChange(LifecycleEvent event) {
-            Objects.requireNonNull(event);
-            if (!RobotMode.ON_AUTO.equals(event.getMode())) {
-                canceller.run();
-            }
+            long now = System.currentTimeMillis();
+            long endpoint = (startTime + maxPeriodLength);
+            long remaining = endpoint - now;
+            long toSleep = Math.min(remaining, unit.toMillis(length));
+            Thread.sleep(toSleep);
+            return System.currentTimeMillis() < endpoint;
         }
     }
 
