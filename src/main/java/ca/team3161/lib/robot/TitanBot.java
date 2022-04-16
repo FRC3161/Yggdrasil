@@ -26,7 +26,6 @@
 
 package ca.team3161.lib.robot;
 
-import ca.team3161.lib.robot.motion.drivetrains.AbstractDrivetrainBase;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import java.util.ArrayList;
@@ -62,10 +61,6 @@ public abstract class TitanBot extends TimedRobot {
             robotSetup();
         } catch (Exception e) {
             handleException("Exception in robotSetup", e);
-        }
-        AbstractDrivetrainBase drivetrainBase = getDrivetrainBase();
-        if (drivetrainBase != null) {
-            registerLifecycleComponent(drivetrainBase);
         }
         transitionLifecycle(LifecycleEvent.ON_INIT);
     }
@@ -275,11 +270,6 @@ public abstract class TitanBot extends TimedRobot {
      * @return the length of the Autonomous period, in seconds.
      */
     public abstract int getAutonomousPeriodLengthSeconds();
-
-    @Deprecated
-    public AbstractDrivetrainBase getDrivetrainBase() {
-        return null;
-    }
 
     public <T extends LifecycleListener> void registerLifecycleComponent(T lifecycleListener) {
         if (!lifecycleAwareComponents.contains(lifecycleListener)) {
