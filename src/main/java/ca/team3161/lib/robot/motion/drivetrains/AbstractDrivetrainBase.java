@@ -51,8 +51,8 @@ public abstract class AbstractDrivetrainBase extends RepeatingPooledSubsystem im
     public abstract void stop();
 
     @Override
-    public void lifecycleStatusChanged(final LifecycleEvent previous, final LifecycleEvent current) {
-        switch (current) {
+    public void lifecycleStatusChanged(final LifecycleEvent event) {
+        switch (event.getMode()) {
             case NONE:
             case ON_INIT:
             case ON_DISABLED:
@@ -63,6 +63,8 @@ public abstract class AbstractDrivetrainBase extends RepeatingPooledSubsystem im
             case ON_TEST:
                 start();
                 break;
+            default:
+                throw new IllegalStateException(event.getMode().toString());
         }
     }
 }

@@ -46,11 +46,11 @@ public class SmartPIDTuner extends RepeatingPooledSubsystem implements Lifecycle
     public void task() { }
 
     @Override
-    public void lifecycleStatusChanged(LifecycleEvent previous, LifecycleEvent current) {
-        this.pTuner.lifecycleStatusChanged(previous, current);
-        this.iTuner.lifecycleStatusChanged(previous, current);
-        this.dTuner.lifecycleStatusChanged(previous, current);
-        switch (current) {
+    public void lifecycleStatusChanged(LifecycleEvent event) {
+        this.pTuner.lifecycleStatusChanged(event);
+        this.iTuner.lifecycleStatusChanged(event);
+        this.dTuner.lifecycleStatusChanged(event);
+        switch (event.getMode()) {
             case NONE:
             case ON_INIT:
             case ON_AUTO:
@@ -62,7 +62,7 @@ public class SmartPIDTuner extends RepeatingPooledSubsystem implements Lifecycle
                 start();
                 break;
             default:
-                throw new IllegalStateException(current.toString());
+                throw new IllegalStateException(event.getMode().toString());
         }
     }
 

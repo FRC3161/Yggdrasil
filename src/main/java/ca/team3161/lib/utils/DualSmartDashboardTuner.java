@@ -79,8 +79,8 @@ public class DualSmartDashboardTuner extends RepeatingPooledSubsystem implements
     }
 
     @Override
-    public void lifecycleStatusChanged(LifecycleEvent previous, LifecycleEvent current) {
-        switch (current) {
+    public void lifecycleStatusChanged(LifecycleEvent event) {
+        switch (event.getMode()) {
             case NONE:
             case ON_INIT:
             case ON_AUTO:
@@ -92,7 +92,7 @@ public class DualSmartDashboardTuner extends RepeatingPooledSubsystem implements
                 start();
                 break;
             default:
-                throw new IllegalStateException(current.toString());
+                throw new IllegalStateException(event.getMode().toString());
         }
     }
 

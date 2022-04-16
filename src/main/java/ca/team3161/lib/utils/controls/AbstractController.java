@@ -162,8 +162,8 @@ public abstract class AbstractController extends RepeatingIndependentSubsystem i
     }
 
     @Override
-    public void lifecycleStatusChanged(final LifecycleEvent previous, final LifecycleEvent current) {
-        switch (current) {
+    public void lifecycleStatusChanged(final LifecycleEvent event) {
+        switch (event.getMode()) {
             case NONE:
             case ON_INIT:
             case ON_DISABLED:
@@ -174,6 +174,8 @@ public abstract class AbstractController extends RepeatingIndependentSubsystem i
             case ON_TEST:
                 enableBindings();
                 break;
+            default:
+                throw new IllegalStateException(event.getMode().toString());
         }
     }
 

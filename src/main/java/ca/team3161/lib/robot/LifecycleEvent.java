@@ -26,12 +26,14 @@
 
 package ca.team3161.lib.robot;
 
-public enum LifecycleEvent {
-    NONE,
-    ON_INIT,
-    ON_TELEOP,
-    ON_AUTO,
-    ON_TEST,
-    ON_DISABLED,
-    ;
+public class LifecycleEvent {
+    private final RobotMode mode;
+
+    LifecycleEvent(RobotMode mode) {
+        this.mode = mode;
+    }
+
+    public RobotMode getMode() {
+        return mode;
+    }
 }

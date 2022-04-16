@@ -61,7 +61,7 @@ public abstract class TitanBot extends TimedRobot {
         } catch (Exception e) {
             handleException("Exception in robotSetup", e);
         }
-        transitionLifecycle(LifecycleEvent.ON_INIT);
+        transitionLifecycle(RobotMode.ON_INIT);
     }
 
     /**
@@ -91,7 +91,7 @@ public abstract class TitanBot extends TimedRobot {
         } finally {
             modeLock.unlock();
         }
-        transitionLifecycle(LifecycleEvent.ON_AUTO);
+        transitionLifecycle(RobotMode.ON_AUTO);
         autoJob = Executors.newSingleThreadExecutor().submit(() -> {
             try {
                 modeLock.lockInterruptibly();
@@ -132,7 +132,7 @@ public abstract class TitanBot extends TimedRobot {
         } catch (Exception e) {
             handleException("Exception in teleopSetup", e);
         }
-        transitionLifecycle(LifecycleEvent.ON_TELEOP);
+        transitionLifecycle(RobotMode.ON_TELEOP);
     }
 
     /**
@@ -183,7 +183,7 @@ public abstract class TitanBot extends TimedRobot {
         } catch (Exception e) {
             handleException("Exception in disabledSetup", e);
         }
-        transitionLifecycle(LifecycleEvent.ON_DISABLED);
+        transitionLifecycle(RobotMode.ON_DISABLED);
     }
 
     /**
@@ -217,7 +217,7 @@ public abstract class TitanBot extends TimedRobot {
         } catch (Exception e) {
             handleException("Exception in testSetup", e);
         }
-        transitionLifecycle(LifecycleEvent.ON_TEST);
+        transitionLifecycle(RobotMode.ON_TEST);
     }
 
     public abstract void testSetup();
@@ -253,9 +253,10 @@ public abstract class TitanBot extends TimedRobot {
         }
     }
 
-    private void transitionLifecycle(LifecycleEvent event) {
+    private void transitionLifecycle(RobotMode mode) {
+        LifecycleEvent event = new LifecycleEvent(mode);
         lifecycleShifter.shift(event);
-        lifecycleAwareComponents.forEach(c -> c.lifecycleStatusChanged(lifecycleShifter.getPrevious(), lifecycleShifter.getCurrent()));
+        lifecycleAwareComponents.forEach(c -> c.lifecycleStatusChanged(event));
     }
 
     private void handleException(String label, Exception e) {
@@ -268,14 +269,14 @@ public abstract class TitanBot extends TimedRobot {
 
         private final int maxPeriodLength;
         private final Runnable canceller;
-        private volatile LifecycleEvent currentMode = LifecycleEvent.ON_AUTO;
+        private volatile RobotMode currentMode = RobotMode.ON_AUTO;
 
         private AutonomousPeriodTimer(int maxPeriodLength, Runnable canceller) {
             this.maxPeriodLength = maxPeriodLength;
             this.canceller = Objects.requireNonNull(canceller);
         }
 
-        public LifecycleEvent getCurrentAutoMode() {
+        public RobotMode getCurrentMode() {
             return currentMode;
         }
 
@@ -296,34 +297,34 @@ public abstract class TitanBot extends TimedRobot {
                 canceller.run();
             }
             Thread.sleep(TimeUnit.MILLISECONDS.convert(length, unit));
-            if (!LifecycleEvent.ON_AUTO.equals(currentMode)) {
+            if (!RobotMode.ON_AUTO.equals(currentMode)) {
                 canceller.run();
             }
         }
 
         @Override
-        public void lifecycleStatusChanged(LifecycleEvent previous, LifecycleEvent current) {
-            this.currentMode = Objects.requireNonNull(current);
-            if (!LifecycleEvent.ON_AUTO.equals(current)) {
+        public void lifecycleStatusChanged(LifecycleEvent event) {
+            Objects.requireNonNull(event);
+            if (!RobotMode.ON_AUTO.equals(event.getMode())) {
                 canceller.run();
             }
         }
     }
 
-    private static class LifecycleShifter {
-        private LifecycleEvent previous = LifecycleEvent.NONE;
-        private LifecycleEvent current = LifecycleEvent.NONE;
+    public static class LifecycleShifter {
+        private RobotMode previous = RobotMode.NONE;
+        private RobotMode current = RobotMode.NONE;
 
         public void shift(LifecycleEvent event) {
             this.previous = this.current;
-            this.current = event;
+            this.current = event.getMode();
         }
 
-        public LifecycleEvent getPrevious() {
+        public RobotMode getPrevious() {
             return previous;
         }
 
-        public LifecycleEvent getCurrent() {
+        public RobotMode getCurrent() {
             return current;
         }
     }

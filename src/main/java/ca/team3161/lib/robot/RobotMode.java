@@ -26,8 +26,12 @@
 
 package ca.team3161.lib.robot;
 
-public interface LifecycleListener {
-
-    void lifecycleStatusChanged(LifecycleEvent event);
-
+public enum RobotMode {
+    NONE,
+    ON_INIT,
+    ON_TELEOP,
+    ON_AUTO,
+    ON_TEST,
+    ON_DISABLED,
+    ;
 }
