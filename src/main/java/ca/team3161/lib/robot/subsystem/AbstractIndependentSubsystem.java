@@ -45,7 +45,11 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public abstract class AbstractIndependentSubsystem extends AbstractSubsystem {
 
-    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(r -> {
+        Thread t = new Thread(r, getClass().getSimpleName() + "Thread");
+        t.setPriority(AbstractSubsystem.THREAD_PRIORITY);
+        return t;
+    });
 
     @Override
     public ScheduledExecutorService getExecutorService() {

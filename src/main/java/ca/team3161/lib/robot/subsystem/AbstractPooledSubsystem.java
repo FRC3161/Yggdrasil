@@ -28,6 +28,7 @@ package ca.team3161.lib.robot.subsystem;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * Abstracts a system which uses resourceLocks and has some task (recurring or
@@ -44,7 +45,12 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public abstract class AbstractPooledSubsystem extends AbstractSubsystem {
 
-    private static final ScheduledExecutorService SCHEDULED_EXECUTOR_SERVICE = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+    private static int THREAD_COUNT = 0;
+    private static final ScheduledExecutorService SCHEDULED_EXECUTOR_SERVICE = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors() - 1, r -> {
+        Thread t = new Thread(r, String.format("PooledSubsystem " + THREAD_COUNT++));
+        t.setPriority(AbstractSubsystem.THREAD_PRIORITY);
+        return t;
+    });
 
     @Override
     public ScheduledExecutorService getExecutorService() {

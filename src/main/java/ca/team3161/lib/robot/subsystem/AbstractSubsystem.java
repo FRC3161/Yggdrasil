@@ -45,6 +45,9 @@ import java.util.concurrent.locks.Lock;
  */
 public abstract class AbstractSubsystem implements Subsystem {
 
+    // reduced priority to alleviate starvation of main robot thread for watchdog, network, etc
+    protected static final int THREAD_PRIORITY = Thread.NORM_PRIORITY - 1;
+
     /**
      * A list of resourceLocks which this Subsystem requires.
      *
