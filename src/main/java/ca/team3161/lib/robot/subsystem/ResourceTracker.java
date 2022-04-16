@@ -52,7 +52,9 @@ public final class ResourceTracker {
     public static Lock track(final Object resource) {
         Objects.requireNonNull(resource);
         synchronized (RESOURCES) {
-            RESOURCES.putIfAbsent(resource, new ReentrantLock());
+            if (RESOURCES.putIfAbsent(resource, new ReentrantLock()) != null) {
+                System.out.println("[WARNING] Multiple owners for resource " + resource.toString() + "");
+            }
             return RESOURCES.get(resource);
         }
     }
