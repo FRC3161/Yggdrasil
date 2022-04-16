@@ -45,9 +45,8 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public abstract class TitanBot extends TimedRobot {
 
-    private volatile int accumulatedTime;
     private final Lock modeLock = new ReentrantLock();
-    private Future<?> autoJob;
+    private volatile Future<?> autoJob;
     private final LifecycleShifter lifecycleShifter = new LifecycleShifter();
     private final Collection<LifecycleListener> lifecycleAwareComponents = new ArrayList<>();
 
@@ -93,11 +92,10 @@ public abstract class TitanBot extends TimedRobot {
             modeLock.unlock();
         }
         transitionLifecycle(LifecycleEvent.ON_AUTO);
-        accumulatedTime = 0;
         autoJob = Executors.newSingleThreadExecutor().submit(() -> {
             try {
                 modeLock.lockInterruptibly();
-                autonomousRoutine();
+                autonomousRoutine(new AutonomousPeriodTimer(getAutonomousPeriodLengthSeconds(), () -> autoJob.cancel(true)));
             } catch (final Exception e) {
                 handleException("Exception in autonomousRoutine", e);
             } finally {
@@ -121,29 +119,7 @@ public abstract class TitanBot extends TimedRobot {
      *
      * @throws Exception this method failing should never catch the caller unaware - may lead to unpredictable behaviour if so
      */
-    public abstract void autonomousRoutine() throws Exception;
-
-    /**
-     * Add a delay to the autonomous routine.
-     * This also ensures that the autonomous routine does not continue
-     * to run after the FMS notifies us that the autonomous period
-     * has ended.
-     *
-     * @param length how long to wait for (approximate)
-     * @param unit   the time units the given delay is in
-     * @throws InterruptedException if the autonomous thread is woken up early, for any reason
-     */
-    public final void waitFor(final long length, final TimeUnit unit) throws InterruptedException {
-        Objects.requireNonNull(unit);
-        accumulatedTime += TimeUnit.MILLISECONDS.convert(length, unit);
-        if (accumulatedTime > TimeUnit.SECONDS.toMillis(getAutonomousPeriodLengthSeconds())) {
-            autoJob.cancel(true);
-        }
-        Thread.sleep(TimeUnit.MILLISECONDS.convert(length, unit));
-        if (!isAutonomous()) {
-            autoJob.cancel(true);
-        }
-    }
+    public abstract void autonomousRoutine(AutonomousPeriodTimer timer) throws Exception;
 
     /**
      * DO NOT CALL THIS MANUALLY!
@@ -285,6 +261,53 @@ public abstract class TitanBot extends TimedRobot {
     private void handleException(String label, Exception e) {
         DriverStation.reportError(label, e.getStackTrace());
         e.printStackTrace(); // TODO log to file?
+    }
+
+    public static class AutonomousPeriodTimer implements LifecycleListener {
+        private volatile int accumulatedTime;
+
+        private final int maxPeriodLength;
+        private final Runnable canceller;
+        private volatile LifecycleEvent currentMode = LifecycleEvent.ON_AUTO;
+
+        private AutonomousPeriodTimer(int maxPeriodLength, Runnable canceller) {
+            this.maxPeriodLength = maxPeriodLength;
+            this.canceller = Objects.requireNonNull(canceller);
+        }
+
+        public LifecycleEvent getCurrentAutoMode() {
+            return currentMode;
+        }
+
+        /*
+         * Add a delay to the autonomous routine.
+         * This also ensures that the autonomous routine does not continue
+         * to run after the FMS notifies us that the autonomous period
+         * has ended.
+         *
+         * @param length how long to wait for (approximate)
+         * @param unit   the time units the given delay is in
+         * @throws InterruptedException if the autonomous thread is woken up early, for any reason
+         */
+        public final void waitFor(final long length, final TimeUnit unit) throws InterruptedException {
+            Objects.requireNonNull(unit);
+            accumulatedTime += TimeUnit.MILLISECONDS.convert(length, unit);
+            if (accumulatedTime > TimeUnit.SECONDS.toMillis(maxPeriodLength)) {
+                canceller.run();
+            }
+            Thread.sleep(TimeUnit.MILLISECONDS.convert(length, unit));
+            if (!LifecycleEvent.ON_AUTO.equals(currentMode)) {
+                canceller.run();
+            }
+        }
+
+        @Override
+        public void lifecycleStatusChanged(LifecycleEvent previous, LifecycleEvent current) {
+            this.currentMode = Objects.requireNonNull(current);
+            if (!LifecycleEvent.ON_AUTO.equals(current)) {
+                canceller.run();
+            }
+        }
     }
 
     private static class LifecycleShifter {
