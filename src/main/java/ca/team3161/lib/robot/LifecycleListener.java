@@ -28,6 +28,6 @@ package ca.team3161.lib.robot;
 
 public interface LifecycleListener {
 
-    void lifecycleStatusChanged(LifecycleEvent event);
+    void onLifecycleChange(LifecycleEvent event);
 
 }

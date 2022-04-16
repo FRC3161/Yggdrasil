@@ -162,7 +162,7 @@ public abstract class AbstractController extends RepeatingIndependentSubsystem i
     }
 
     @Override
-    public void lifecycleStatusChanged(final LifecycleEvent event) {
+    public void onLifecycleChange(final LifecycleEvent event) {
         switch (event.getMode()) {
             case NONE:
             case ON_INIT:

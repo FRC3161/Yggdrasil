@@ -256,7 +256,7 @@ public abstract class TitanBot extends TimedRobot {
     private void transitionLifecycle(RobotMode mode) {
         LifecycleEvent event = new LifecycleEvent(mode);
         lifecycleShifter.shift(event);
-        lifecycleAwareComponents.forEach(c -> c.lifecycleStatusChanged(event));
+        lifecycleAwareComponents.forEach(c -> c.onLifecycleChange(event));
     }
 
     private void handleException(String label, Exception e) {
@@ -303,7 +303,7 @@ public abstract class TitanBot extends TimedRobot {
         }
 
         @Override
-        public void lifecycleStatusChanged(LifecycleEvent event) {
+        public void onLifecycleChange(LifecycleEvent event) {
             Objects.requireNonNull(event);
             if (!RobotMode.ON_AUTO.equals(event.getMode())) {
                 canceller.run();

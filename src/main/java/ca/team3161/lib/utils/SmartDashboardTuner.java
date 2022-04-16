@@ -64,7 +64,7 @@ public class SmartDashboardTuner extends RepeatingPooledSubsystem implements Lif
     }
 
     @Override
-    public void lifecycleStatusChanged(LifecycleEvent event) {
+    public void onLifecycleChange(LifecycleEvent event) {
         switch (event.getMode()) {
             case NONE:
             case ON_INIT:

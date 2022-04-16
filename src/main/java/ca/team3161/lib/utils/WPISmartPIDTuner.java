@@ -38,8 +38,8 @@ public class WPISmartPIDTuner extends RepeatingPooledSubsystem implements Lifecy
     public void task() { }
 
     @Override
-    public void lifecycleStatusChanged(LifecycleEvent event) {
-        tuners.forEach(t -> t.lifecycleStatusChanged(event));
+    public void onLifecycleChange(LifecycleEvent event) {
+        tuners.forEach(t -> t.onLifecycleChange(event));
         switch (event.getMode()) {
             case NONE:
             case ON_INIT:
