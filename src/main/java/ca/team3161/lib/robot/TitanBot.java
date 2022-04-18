@@ -130,6 +130,11 @@ public abstract class TitanBot extends TimedRobot implements LifecycleListener {
     @Override
     public final void teleopInit() {
         super.teleopInit();
+        boolean locked = modeLock.tryLock();
+        if (!locked) {
+            System.err.println("[ERROR] Failed to run teleopSetup - could not acquire lock!");
+            return;
+        }
         try {
             teleopSetup();
         } catch (Exception e) {
@@ -153,8 +158,12 @@ public abstract class TitanBot extends TimedRobot implements LifecycleListener {
     @Override
     public final void teleopPeriodic() {
         super.teleopPeriodic();
+        boolean locked = modeLock.tryLock();
+        if (!locked) {
+            System.err.println("[ERROR] Failed to run teleopRoutine - could not acquire lock!");
+            return;
+        }
         try {
-            modeLock.lock();
             teleopRoutine();
         } catch (Exception e) {
             handleException("Exception in teleopRoutine", e);
@@ -178,6 +187,11 @@ public abstract class TitanBot extends TimedRobot implements LifecycleListener {
     @Override
     public final void disabledInit() {
         super.disabledInit();
+        boolean locked = modeLock.tryLock();
+        if (!locked) {
+            System.err.println("[ERROR] Failed to run disabledSetup - could not acquire lock!");
+            return;
+        }
         try {
             disabledSetup();
         } catch (Exception e) {
@@ -194,8 +208,12 @@ public abstract class TitanBot extends TimedRobot implements LifecycleListener {
     @Override
     public final void disabledPeriodic() {
         super.disabledPeriodic();
+        boolean locked = modeLock.tryLock();
+        if (!locked) {
+            System.err.println("[ERROR] Failed to run disabledRoutine - could not acquire lock!");
+            return;
+        }
         try {
-            modeLock.lock();
             disabledRoutine();
         } catch (Exception e) {
             handleException("Exception in disabledRoutine", e);
@@ -209,6 +227,11 @@ public abstract class TitanBot extends TimedRobot implements LifecycleListener {
     @Override
     public final void testInit() {
         super.testInit();
+        boolean locked = modeLock.tryLock();
+        if (!locked) {
+            System.err.println("[ERROR] Failed to run testSetup - could not acquire lock!");
+            return;
+        }
         try {
             testSetup();
         } catch (Exception e) {
@@ -222,8 +245,12 @@ public abstract class TitanBot extends TimedRobot implements LifecycleListener {
     @Override
     public final void testPeriodic() {
         super.testPeriodic();
+        boolean locked = modeLock.tryLock();
+        if (!locked) {
+            System.err.println("[ERROR] Failed to run testRoutine - could not acquire lock!");
+            return;
+        }
         try {
-            modeLock.lock();
             testRoutine();
         } catch (Exception e) {
             handleException("Exception in testRoutine", e);
