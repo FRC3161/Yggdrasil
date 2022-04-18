@@ -53,7 +53,7 @@ public final class ResourceTracker {
         Objects.requireNonNull(resource);
         synchronized (RESOURCES) {
             if (RESOURCES.putIfAbsent(resource, new ReentrantLock()) != null) {
-                System.out.println("[WARNING] Multiple owners for resource " + resource.toString() + "");
+                System.err.println("[WARNING] Multiple owners for resource " + resource.toString() + "");
             }
             return RESOURCES.get(resource);
         }
