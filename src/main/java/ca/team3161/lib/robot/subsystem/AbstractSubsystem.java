@@ -137,11 +137,27 @@ public abstract class AbstractSubsystem implements Subsystem {
      * The task for this Subsystem to run.
      */
     protected class RunTask implements Runnable {
+        protected final long maxExecutionMs;
+
+        protected RunTask(long maxExecutionMs) {
+            this.maxExecutionMs = maxExecutionMs;
+        }
+
+        protected RunTask() {
+            this(-1);
+        }
+
         @Override
         public void run() {
+            long start = System.currentTimeMillis();
             try {
                 acquireResources();
                 task();
+                long end = System.currentTimeMillis();
+                long elapsed = end - start;
+                if (maxExecutionMs > 0 && elapsed > maxExecutionMs) {
+                    System.err.println(String.format("[WARNING] task() for subsystem %s took %dms, expected no more than %dms", getClass().getSimpleName(), elapsed, maxExecutionMs));
+                }
             } catch (final Exception e) {
                 DriverStation.reportError(e.getMessage(), e.getStackTrace());
                 e.printStackTrace();
