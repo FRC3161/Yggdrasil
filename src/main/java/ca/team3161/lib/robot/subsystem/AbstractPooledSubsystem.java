@@ -46,7 +46,7 @@ import java.util.concurrent.ThreadFactory;
 public abstract class AbstractPooledSubsystem extends AbstractSubsystem {
 
     private static int THREAD_COUNT = 0;
-    private static final ScheduledExecutorService SCHEDULED_EXECUTOR_SERVICE = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors() - 1, r -> {
+    private static final ScheduledExecutorService SCHEDULED_EXECUTOR_SERVICE = Executors.newScheduledThreadPool(Math.max(1, Runtime.getRuntime().availableProcessors() - 1), r -> {
         Thread t = new Thread(r, String.format("PooledSubsystem " + THREAD_COUNT++));
         t.setPriority(AbstractSubsystem.THREAD_PRIORITY);
         return t;
