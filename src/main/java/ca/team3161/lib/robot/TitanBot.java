@@ -108,7 +108,7 @@ public abstract class TitanBot extends TimedRobot implements LifecycleListener {
     }
 
     /**
-     * Called once each time before {@link TitanBot#autonomousRoutine()} is called.
+     * Called once each time before {@link TitanBot#autonomousRoutine(AutonomousPeriodTimer timer)} is called.
      */
     public abstract void autonomousSetup();
 
@@ -120,6 +120,7 @@ public abstract class TitanBot extends TimedRobot implements LifecycleListener {
     /**
      * The one-shot autonomous "script" to be run in a new Thread.
      *
+     * @param timer an {@link AutonomousPeriodTimer} instance to be used for causing the autonomous routine thread to sleep/wait. This should always be used over "bare" Thread.sleep() or Timer.delay().
      * @throws Exception this method failing should never catch the caller unaware - may lead to unpredictable behaviour if so
      */
     public abstract void autonomousRoutine(AutonomousPeriodTimer timer) throws Exception;
